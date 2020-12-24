@@ -2,7 +2,7 @@
 <html>
    <body>
 
-      <h3>Students - Flask SQLAlchemy example</h3>
+      <h3>NFL Query Database</h3>
       <hr/>
 
       {%- for category, message in get_flashed_messages(with_categories = true) %}
@@ -12,16 +12,32 @@
       {%- endfor %}
 
       <form action = "{{ request.path }}" method = "post">
-         <label for = "name">Name</label><br>
-         <input type = "text" name = "name" placeholder = "Name" /><br>
-         <label for = "email">City</label><br>
-         <input type = "text" name = "city" placeholder = "city" /><br>
-         <label for = "addr">addr</label><br>
-         <textarea name = "addr" placeholder = "addr"></textarea><br>
-         <label for = "PIN">City</label><br>
-         <input type = "text" name = "pin" placeholder = "pin" /><br>
-         <input type = "submit" value = "Submit" />
+         <label for = "team">Team</label><br>
+         <select name = "team" id = "team">
+             <option value = "Philadelphia">Philadelphia</option>
+             <option value = "Dallas">Dallas</option>
+             <option value = "NYGiants">NYGiants</option>
+             <option value = "Washington">Washington</option>
+             <option value = "Pittsburgh">Pittsburgh</option>
+         </select></br>
+         <label for = "isFav">Favourite or Underdog</label><br>
+         <select name = "isFav" id = "isFav">
+             <option value = "Favourite">Favourite</option>
+             <option value = "Underdog">Underdog</option>
+         </select></br>
+         <label for = "isGreater">By more/less then</label><br>
+         <select name = "isGreater" id = "isGreater">
+             <option value = "more">By More then</option>
+             <option value = "less">By Less then</option>
+         </select></br>
+         <label for = "">Points</label><br>
+         <input type = "number" name = "points" placeholder = "0" /><br>
+         <input type = "submit" value = "Query" />
       </form>
+
+      <tbody>
+          <tr>{{team}}</tr>
+      </tbody>
 
    </body>
 </html>

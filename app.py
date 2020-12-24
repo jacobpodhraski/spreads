@@ -9,22 +9,8 @@ db = SQLAlchemy(app)
 
 nfl2020 = db.Table('nfl2020', db.metadata, autoload = True, autoload_with=db.engine)
 
-class students(db.Model):
-
-    id = db.Column('student_id', db.Integer, primary_key = True)
-    name = db.Column(db.String(100))
-    city = db.Column(db.String(50))
-    addr = db.Column(db.String(200))
-    pin = db.Column(db.String(10))
-
-    def __init__(self, name, city, addr,pin):
-        self.name = name
-        self.city = city
-        self.addr = addr
-        self.pin = pin
-
 @app.route('/')
-def show_all():
+def showQueryResults():
 
     results = db.session.query(nfl2020).all()
     for r in results:
@@ -36,21 +22,21 @@ def show_all():
 
 
 @app.route('/new', methods = ['GET', 'POST'])
-def new():
+def query():
     if request.method == 'POST':
-        if not request.form['name'] or not request.form['city'] or not request.form['addr']:
-            flash('Please enter all the fields', 'error')
-        else:
-            student = students(request.form['name'], request.form['city'],
-            request.form['addr'], request.form['pin'])
+        team = request.form['team']
+        isFav = request.form['isFav']
+        isGreater = request.form['isGreater']
+        points = request.form['points']
 
-        db.session.add(student)
-        db.session.commit()
-        flash('Record was successfully added')
-        return redirect(url_for('show_all'))
+        print (team + isFav + isGreater + points)
 
-    return render_template('new.html')
+        r = db.engine.execute('select ' + 'team' + ', final from nfl2020')
+
+        for entry in r:
+            print (entry.team + ' - ' + str(entry.final))
+
+    return render_template('new.html', team = team)
 
 if __name__ == '__main__':
-    db.create_all()
     app.run(debug = True)
