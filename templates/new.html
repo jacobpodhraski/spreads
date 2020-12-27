@@ -35,9 +35,40 @@
          <input type = "submit" value = "Query" />
       </form>
 
+      <table>
+          <thead>
+              <tr>
+                  <th>Date</th>
+                  <th>V/H</th>
+                  <th>Team</th>
+                  <th>1st Q</th>
+                  <th>2nd Q</th>
+                  <th>3rd Q</th>
+                  <th>4th Q</th>
+                  <th>Final Score</th>
+                  <th>Open</th>
+                  <th>Close</th>
+                  <th>ML</th>
+              </tr>
+          </thead>
       <tbody>
-          <tr>{{team}}</tr>
+          {% for game in games %}
+          <tr align = "center">
+            <td>{{game.date}}</td>
+            <td>{{game.vh}}</td>
+            <td>{{game.team}}</td>
+            <td>{{game.first}}</td>
+            <td>{{game.second}}</td>
+            <td>{{game.third}}</td>
+            <td>{{game.fourth}}</td>
+            <td>{{game.final}}</td>
+            <td>{{game.open}}</td>
+            <td>{{game.close}}</td>
+            <td>{{game.ml}}</td>
+          </tr>
+          {% endfor %}
       </tbody>
+      </table>
 
    </body>
 </html>

@@ -7,7 +7,7 @@ app.config['SECRET_KEY'] = "random string"
 
 db = SQLAlchemy(app)
 
-nfl2020 = db.Table('nfl2020', db.metadata, autoload = True, autoload_with=db.engine)
+nfl2020 = db.Table('nfl2020a', db.metadata, autoload = True, autoload_with=db.engine)
 
 @app.route('/')
 def showQueryResults():
@@ -33,10 +33,50 @@ def query():
 
         r = db.engine.execute('select ' + 'team' + ', final from nfl2020')
 
-        for entry in r:
-            print (entry.team + ' - ' + str(entry.final))
+        teamEntries = findAllGamesForTeam(team, isFav, isGreater, points)
 
-    return render_template('new.html', team = team)
+        gameIds = findAllGameIds(teamEntries)
+        print(gameIds)
+
+        currentGamesTable = getTableOfAllRelevantGames(gameIds)
+
+        return render_template('new.html', games = currentGamesTable )
+
+
+def findAllGamesForTeam(team, isFav, isGreater, points):
+
+    queryStatement = 'select * from nfl2020a'
+    if team != 'any':
+        queryStatement = queryStatement + " where team like '" + team + "';"
+    else:
+        queryStatement = queryStatement + ';'
+
+    print(queryStatement)
+
+    return db.engine.execute(queryStatement)
+
+def findAllGameIds(teamEntries):
+
+    listOfGameIds = []
+    for entry in teamEntries:
+        listOfGameIds.append(entry.gameid)
+
+    return listOfGameIds
+
+def getTableOfAllRelevantGames(gameIds):
+
+    queryStatement = "select * from nfl2020a where "
+
+    for i in range(0, len(gameIds)):
+
+        if i == 0:
+            queryStatement = queryStatement + 'gameid = ' + str(gameIds[i])
+        else:
+            queryStatement = queryStatement + ' or gameid = ' + str(gameIds[i])
+
+
+    return db.engine.execute(queryStatement)
+
 
 if __name__ == '__main__':
     app.run(debug = True)
