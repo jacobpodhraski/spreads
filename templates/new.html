@@ -14,11 +14,49 @@
       <form action = "{{ request.path }}" method = "post">
          <label for = "team">Team</label><br>
          <select name = "team" id = "team">
-             <option value = "Philadelphia">Philadelphia</option>
+             <option value = "any">any</option>
+             <option value = "Arizona">Arizona</option>
+             <option value = "Atlanta">Atlanta</option>
+             <option value = "Buffalo">Buffalo</option>
+             <option value = "Baltimore">Baltimore</option>
+             <option value = "Carolina">Carolina</option>
+             <option value = "Cincinnati">Cincinnati</option>
+             <option value = "Cleveland">Cleveland</option>
+             <option value = "Chicago">Chicago</option>
              <option value = "Dallas">Dallas</option>
+             <option value = "Denver">Denver</option>
+             <option value = "Detroit">Detroit</option>
+             <option value = "GreenBay">GreenBay</option>
+             <option value = "Houston">Houston</option>
+             <option value = "Indianapolis">Indianapolis</option>
+             <option value = "KansasCity">KansasCity</option>
+             <option value = "LAChargers">LAChargers</option>
+             <option value = "LARams">LARams</option>
+             <option value = "Jacksonville">Jacksonville</option>
+             <option value = "Miami">Miami</option>
+             <option value = "Minnesota">Minnesota</option>
+             <option value = "NewEngland">NewEngland</option>
+             <option value = "NewOrleans">NewOrleans</option>
              <option value = "NYGiants">NYGiants</option>
-             <option value = "Washington">Washington</option>
+             <option value = "NYJets">NYJets</option>
+             <option value = "Oakland">Oakland</option>
+             <option value = "Philadelphia">Philadelphia</option>
+             <option value = "SanFrancisco">SanFrancisco</option>
+             <option value = "Seattle">Seattle</option>
              <option value = "Pittsburgh">Pittsburgh</option>
+             <option value = "TampaBay">TampaBay</option>
+             <option value = "Tennessee">Tennessee</option>
+             <option value = "Washington">Washington</option>
+         </select></br>
+         <label for = "month">Month</label><br>
+         <select name = "month" id = " month">
+             <option value = "any">any</option>
+             <option value = "September">September</option>
+             <option value = "October">October</option>
+             <option value = "November">November</option>
+             <option value = "December">December</option>
+             <option value = "January">January</option>
+             <option value = "February">February</option>
          </select></br>
          <label for = "isFav">Favourite or Underdog</label><br>
          <select name = "isFav" id = "isFav">
@@ -69,6 +107,13 @@
           {% endfor %}
       </tbody>
       </table>
+
+      {% for key in test %}
+      <div>
+          {{key}}
+      </div>
+      {% endfor %}
+
 
    </body>
 </html>
