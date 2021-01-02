@@ -10,19 +10,7 @@ db = SQLAlchemy(app)
 
 nfl2020 = db.Table('nfl2020', db.metadata, autoload = True, autoload_with=db.engine)
 
-@app.route('/')
-def showQueryResults():
-
-    results = db.session.query(nfl2020).all()
-    for r in results:
-        team = r.team
-
-
-   # return render_template('show_all.html', students = students.query.all() )
-    return render_template('show_all.html', nfl2020 = db.session.query(nfl2020).all())
-
-
-@app.route('/new', methods = ['GET', 'POST'])
+@app.route('/', methods = ['GET', 'POST'])
 def query():
 
     if request.method == 'POST':
@@ -31,8 +19,12 @@ def query():
         isFav     = request.form['isFav']
         isGreater = request.form['isGreater']
         points    = request.form['points']
+        if points == "":
+            points = str(0)
         beginYear = request.form['beginYear']
         endYear   = request.form['endYear']
+
+
 
         # Check if the years are valid
         if int(endYear) - int(beginYear) < 0:
@@ -41,67 +33,45 @@ def query():
 
         yearByYear = OrderedDict()
         for year in range(int(beginYear), int(endYear) + 1):
+            print("Queing year " + str(year))
             if team != 'any':
-                queryStatement = prepareQueryStatementForTeam(str(year), team, isFav, isGreater, points)
-
-
-
-        teamEntries = findAllGamesForTeam(team, isFav, isGreater, points)
-
-        gameIds = findAllGameIds(teamEntries)
-        print(gameIds)
-
-        #currentGamesTable = getTableOfAllRelevantGames(gameIds)
-
-        #dictOfGameScores = prepareGameLinesDict(currentGamesTable)
-
-       # [suRecord, atsRecord] = obtainRecords(dictOfGameScores)
-
-        return render_template('new.html')
-
-       # return render_template('new.html', games = getTableOfAllRelevantGames(gameIds))
-
+                yearByYear[year] = prepareQueryStatementForTeam(str(year), team, isFav, isGreater, points)
+        return render_template('new.html', dictOfYears = yearByYear)
 
     else:
 
-        return render_template('new.html')
+        return render_template('new.html', dictOfYears = OrderedDict())
 
 def prepareQueryStatementForTeam(year, team, isFav, isGreater, points):
 
     statement = "select * from nfl" + year + " where team like '"+ team + "' and "
 
-    if isFav:
-        if isGreater:
+    if isFav == "Favourite":
+        if isGreater == "more":
             # Set the spread requirement to under 30 (lowest o.u in history)
-            statement.append('close < 30 and close > ' + points + ';'
+            statement = statement + 'close < 30 and close > ' + points + ';'
         else:
-            statement.append('close > 0 and close < ' + points + ';'
+            statement = statement + 'close > 0 and close < ' + points + ';'
 
+        print(statement)
         favGameIds = findAllGameIds(db.engine.execute(statement))
+        favGames = getTableOfAllRelevantUnderdogGames(favGameIds, str(year), team)
+        return favGames
 
     else:
-        statement.append('close >= 30')
-        obtainAllUnderdogs = db.execute(statement)
+        statement = statement + 'close >= 30'
+        obtainAllUnderdogs = db.engine.execute(statement)
         underdogGameIds = findAllGameIds(obtainAllUnderdogs)
-        relevantUnderdogGames =
-
-
-        if isGreater:
-
+        print("ready to operate on " )
+        print(underdogGameIds)
+        relevantUnderdogGames = getTableOfAllRelevantUnderdogGames(underdogGameIds, str(year), team)
+        if isGreater == "more":
+            filteredUnderdogGameIds = filterUnderdogGameIds(relevantUnderdogGames, True, points)
         else:
+            filteredUnderdogGameIds = filterUnderdogGameIds(relevantUnderdogGames, False, points)
 
-
-def findAllGamesForTeam(team, isFav, isGreater, points):
-
-    queryStatement = 'select * from nfl2020'
-    if team != 'any':
-        queryStatement = queryStatement + " where team like '" + team + "';"
-    else:
-        queryStatement = queryStatement + ';'
-
-    print(queryStatement)
-
-    return db.engine.execute(queryStatement)
+        filteredUnderdogGames = getTableOfAllRelevantUnderdogGames(filteredUnderdogGameIds, str(year), team)
+        return filteredUnderdogGames
 
 def findAllGameIds(teamEntries):
 
@@ -111,16 +81,37 @@ def findAllGameIds(teamEntries):
 
     return listOfGameIds
 
-def getTableOfAllRelevantGames(gameIds, year, team):
+def getTableOfAllRelevantUnderdogGames(gameIds, year, team):
 
     queryStatement = "select * from nfl" + year + " where "
+    print(gameIds)
+    if len(gameIds) == 0:
+        return db.engine.execute("select * from nfl" + year + " where gameid = 0;")
+
     for i in range(0, len(gameIds)):
         if i == 0:
-            queryStatement.append("gameid = " + str(gameIds[i] + " ")
+            queryStatement = queryStatement + "gameid = " + str(gameIds[i]) + " "
         else:
-            queryStatement.append("or gameid = " + str(gameIds[i]) + " ")
-    queryStatement.append(";")
+            queryStatement = queryStatement + "or gameid = " + str(gameIds[i]) + " "
+    queryStatement = queryStatement + ";"
     return db.engine.execute(queryStatement)
+
+def filterUnderdogGameIds(underdogGames, isGreater, points):
+
+    listOfIds = []
+    for game in underdogGames:
+        if game.close > 30:
+            continue
+        else:
+            if isGreater:
+                if game.close > int(points):
+                    listOfIds.append(game.gameid)
+            else:
+                if game.close < int(points):
+                    listOfIds.append(game.gameid)
+    return listOfIds
+
+
 
 if __name__ == '__main__':
     app.run(debug = True)
