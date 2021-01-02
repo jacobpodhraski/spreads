@@ -100,9 +100,39 @@
          <input type = "submit" value = "Query" />
       </form>
       <p>{{errorMessage}}</p>
-
+      <table border="1">
+          <thead>
+              <tr align = "center">
+                  <th>Year</th>
+                  <th>ATS (W-L-T)</th>
+                  <th>SU (W-L-T)</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr align = "center">
+                  <td>{{beginYear}}-{{endYear}}</td>
+                  <td>{{totalRecord[0]}}-{{totalRecord[1]}}-{{totalRecord[2]}}</td>
+                  <td>{{totalRecord[3]}}-{{totalRecord[4]}}-{{totalRecord[5]}}</td>
+              </tr>
+          </tbody>
+      </table>
       {% for key, value in dictOfYears.items() %}
-      <div>{{key}}</div>
+      <table border="1">
+          <thead>
+              <tr align = "center">
+                  <th>Year</th>
+                  <th>ATS (W-L-T)</th>
+                  <th>SU (W-L-T)</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr align = "center">
+                  <td>{{key}}</td>
+                  <td>{{records[loop.index0][0]}}-{{records[loop.index0][1]}}-{{records[loop.index0][2]}}</td>
+                  <td>{{records[loop.index0][3]}}-{{records[loop.index0][4]}}-{{records[loop.index0][5]}}</td>
+              </tr>
+          </tbody>
+      </table>
 
       <table>
           <thead>

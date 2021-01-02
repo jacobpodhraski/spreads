@@ -33,13 +33,29 @@ def query():
 
         yearByYear = OrderedDict()
         records = []
+        totalWinsAts = 0
+        totalLossesAts = 0
+        totalTiesAts = 0
+        totalWins = 0
+        totalLosses = 0
+        totalTies = 0
+
         for year in range(int(beginYear), int(endYear) + 1):
             print("Queing year " + str(year))
             if team != 'any':
                 yearByYear[year], record = prepareQueryStatementForTeam(str(year), team, isFav, isGreater, points)
+
+                totalWinsAts = totalWinsAts + record[0]
+                totalLossesAts = totalLossesAts + record[1]
+                totalTiesAts = totalTiesAts + record[2]
+                totalWins = totalWins + record[3]
+                totalLosses = totalLosses + record[4]
+                totalTies = totalTies + record[5]
                 records.append(record)
                 print(records)
-        return render_template('new.html', dictOfYears = yearByYear, records = records)
+
+        totalRecord = [totalWinsAts, totalLossesAts, totalTiesAts, totalWins, totalLosses, totalTies]
+        return render_template('new.html', dictOfYears = yearByYear, records = records, totalRecord = totalRecord, beginYear = beginYear, endYear = endYear)
 
     else:
 
