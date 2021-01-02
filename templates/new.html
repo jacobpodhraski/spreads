@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+   <body>
+
+      <h3>NFL Query Database</h3>
+      <hr/>
+
+      {%- for category, message in get_flashed_messages(with_categories = true) %}
+         <div class = "alert alert-danger">
+            {{ message }}
+         </div>
+      {%- endfor %}
+
+      <form action = "{{ request.path }}" method = "post">
+         <label for = "team">Team</label><br>
+         <select name = "team" id = "team">
+             <option value = "Arizona">Arizona</option>
+             <option value = "Atlanta">Atlanta</option>
+             <option value = "Buffalo">Buffalo</option>
+             <option value = "Baltimore">Baltimore</option>
+             <option value = "Carolina">Carolina</option>
+             <option value = "Cincinnati">Cincinnati</option>
+             <option value = "Cleveland">Cleveland</option>
+             <option value = "Chicago">Chicago</option>
+             <option value = "Dallas">Dallas</option>
+             <option value = "Denver">Denver</option>
+             <option value = "Detroit">Detroit</option>
+             <option value = "GreenBay">GreenBay</option>
+             <option value = "Houston">Houston</option>
+             <option value = "Indianapolis">Indianapolis</option>
+             <option value = "KansasCity">KansasCity</option>
+             <option value = "LAChargers">LAChargers</option>
+             <option value = "LARams">LARams</option>
+             <option value = "Jacksonville">Jacksonville</option>
+             <option value = "Miami">Miami</option>
+             <option value = "Minnesota">Minnesota</option>
+             <option value = "NewEngland">NewEngland</option>
+             <option value = "NewOrleans">NewOrleans</option>
+             <option value = "NYGiants">NYGiants</option>
+             <option value = "NYJets">NYJets</option>
+             <option value = "Oakland">Oakland</option>
+             <option value = "Philadelphia">Philadelphia</option>
+             <option value = "SanFrancisco">SanFrancisco</option>
+             <option value = "Seattle">Seattle</option>
+             <option value = "Pittsburgh">Pittsburgh</option>
+             <option value = "TampaBay">TampaBay</option>
+             <option value = "Tennessee">Tennessee</option>
+             <option value = "Washington">Washington</option>
+         </select></br>
+         <label for = "beginYear">Year</label><br>
+         <select name = "beginYear" id = "beginYear">
+             <option value = "2010">2010</option>
+             <option value = "2011">2011</option>
+             <option value = "2012">2012</option>
+             <option value = "2013">2013</option>
+             <option value = "2014">2014</option>
+             <option value = "2015">2015</option>
+             <option value = "2016">2016</option>
+             <option value = "2017">2017</option>
+             <option value = "2018">2018</option>
+             <option value = "2019">2019</option>
+             <option value = "2020">2020</option>
+         </select>to
+         <select name = "endYear" id = "endYear">
+             <option value = "2010">2010</option>
+             <option value = "2011">2011</option>
+             <option value = "2012">2012</option>
+             <option value = "2013">2013</option>
+             <option value = "2014">2014</option>
+             <option value = "2015">2015</option>
+             <option value = "2016">2016</option>
+             <option value = "2017">2017</option>
+             <option value = "2018">2018</option>
+             <option value = "2019">2018</option>
+             <option value = "2020">2020</option>
+         </select>
+         <br>
+         <label for = "month">Month</label><br>
+         <select name = "beginMonth" id = " beginMonth">
+             <option value = "any">any</option>
+             <option value = "September">September</option>
+             <option value = "October">October</option>
+             <option value = "November">November</option>
+             <option value = "December">December</option>
+             <option value = "January">January</option>
+             <option value = "February">February</option>
+         </select>to
+         <select name = "endMonth" id = "endMonth">
+             <option value = "any">any</option>
+             <option value = "September">September</option>
+             <option value = "October">October</option>
+             <option value = "November">November</option>
+             <option value = "December">December</option>
+             <option value = "January">January</option>
+             <option value = "February">February</option>
+         </select>
+         </br>
+         <label for = "isFav">Favourite or Underdog</label><br>
+         <select name = "isFav" id = "isFav">
+             <option value = "Favourite">Favourite</option>
+             <option value = "Underdog">Underdog</option>
+         </select></br>
+         <label for = "isGreater">By more/less then</label><br>
+         <select name = "isGreater" id = "isGreater">
+             <option value = "more">By More then</option>
+             <option value = "less">By Less then</option>
+         </select></br>
+         <label for = "">Points</label><br>
+         <input type = "number" step = "0.5" name = "points" placeholder = "0" /><br>
+         <input type = "submit" value = "Query" />
+      </form>
+      <p>{{errorMessage}}</p>
+      <table border="1">
+          <thead>
+              <tr align = "center">
+                  <th>Year</th>
+                  <th>ATS (W-L-T)</th>
+                  <th>SU (W-L-T)</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for key, val in dictOfYears.items() %}
+              <tr align = "center">
+                  <td>{{key}}</td>
+                  <td>{{records[loop.index0][0]}}-{{records[loop.index0][1]}}-{{records[loop.index0][2]}}</td>
+                  <td>{{records[loop.index0][3]}}-{{records[loop.index0][4]}}-{{records[loop.index0][5]}}</td>
+              {% endfor %}
+              <tr align = "center">
+                  <td>{{beginYear}}-{{endYear}}</td>
+                  <td>{{totalRecord[0]}}-{{totalRecord[1]}}-{{totalRecord[2]}}</td>
+                  <td>{{totalRecord[3]}}-{{totalRecord[4]}}-{{totalRecord[5]}}</td>
+              </tr>
+          </tbody>
+      </table>
+      {% for key, value in dictOfYears.items() %}
+      <table border = "1">
+          <thead>
+              <tr align = "center">
+                  <th colspan = "11">{{key}}</th>
+              </tr>
+              <tr>
+                  <th>Date</th>
+                  <th>V/H</th>
+                  <th>Team</th>
+                  <th>1st Q</th>
+                  <th>2nd Q</th>
+                  <th>3rd Q</th>
+                  <th>4th Q</th>
+                  <th>Final Score</th>
+                  <th>Open</th>
+                  <th>Close</th>
+                  <th>ML</th>
+              </tr>
+          </thead>
+      <tbody>
+          {% for game in value %}
+          <tr align = "center">
+            <td>{{game.date}}</td>
+            <td>{{game.vh}}</td>
+            <td>{{game.team}}</td>
+            <td>{{game.first}}</td>
+            <td>{{game.second}}</td>
+            <td>{{game.third}}</td>
+            <td>{{game.fourth}}</td>
+            <td>{{game.final}}</td>
+            <td>{{game.open}}</td>
+            <td>{{game.close}}</td>
+            <td>{{game.ml}}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+      {% endfor %}
+
+
+      {% for key in test %}
+      <div>
+          {{key}}
+      </div>
+      {% endfor %}
+
+
+   </body>
+</html>
