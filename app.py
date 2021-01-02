@@ -32,11 +32,14 @@ def query():
 
 
         yearByYear = OrderedDict()
+        records = []
         for year in range(int(beginYear), int(endYear) + 1):
             print("Queing year " + str(year))
             if team != 'any':
-                yearByYear[year] = prepareQueryStatementForTeam(str(year), team, isFav, isGreater, points)
-        return render_template('new.html', dictOfYears = yearByYear)
+                yearByYear[year], record = prepareQueryStatementForTeam(str(year), team, isFav, isGreater, points)
+                records.append(record)
+                print(records)
+        return render_template('new.html', dictOfYears = yearByYear, records = records)
 
     else:
 
@@ -55,8 +58,9 @@ def prepareQueryStatementForTeam(year, team, isFav, isGreater, points):
 
         print(statement)
         favGameIds = findAllGameIds(db.engine.execute(statement))
+        records = obtainRecords(favGameIds, team, year)
         favGames = getTableOfAllRelevantUnderdogGames(favGameIds, str(year), team)
-        return favGames
+        return favGames, records
 
     else:
         statement = statement + 'close >= 30'
@@ -70,8 +74,9 @@ def prepareQueryStatementForTeam(year, team, isFav, isGreater, points):
         else:
             filteredUnderdogGameIds = filterUnderdogGameIds(relevantUnderdogGames, False, points)
 
+        records = obtainRecords(filteredUnderdogGameIds, team, year)
         filteredUnderdogGames = getTableOfAllRelevantUnderdogGames(filteredUnderdogGameIds, str(year), team)
-        return filteredUnderdogGames
+        return filteredUnderdogGames, records
 
 def findAllGameIds(teamEntries):
 
@@ -111,6 +116,63 @@ def filterUnderdogGameIds(underdogGames, isGreater, points):
                     listOfIds.append(game.gameid)
     return listOfIds
 
+def obtainRecords(gameIds, team, year):
+
+    losses = 0
+    wins = 0
+    ties = 0
+
+    lossesAts = 0
+    winsAts = 0
+    tiesAts = 0
+
+    print("Game ids for record")
+    print(gameIds)
+    for i in range(0, len(gameIds)):
+        print(gameIds[i])
+        statement = "select * from nfl" + year + " where gameid = " + str(gameIds[i]) + ";"
+        print(statement)
+        currGame = db.engine.execute(statement)
+        for game in currGame:
+            print(game.team)
+            print(game.close)
+            print(game.final)
+            if game.team == team:
+                teamScore = game.final
+                if game.close < 30:
+                    isFav = True
+                    spread = game.close
+            else:
+                otherScore = game.final
+                if game.close < 30:
+                    isFav = False
+                    spread = game.close
+
+        if teamScore - otherScore > 0:
+            wins = wins + 1
+        elif teamScore - otherScore == 0:
+            ties = ties + 1
+        else:
+            losses = losses + 1
+
+        if isFav:
+            if teamScore - otherScore > spread:
+                winsAts = winsAts + 1
+            elif teamScore - otherScore == 0:
+                tiesAts = tiesAts + 1
+            else:
+                lossesAts = lossesAts + 1
+
+        else:
+            if (teamScore + spread) - otherScore > 0:
+                winsAts = winsAts + 1
+            elif (teamScore + spread) - otherScore == 0:
+                tiesAts = tiesAts + 1
+            else:
+                lossesAts = lossesAts + 1
+
+    records = [winsAts, lossesAts, tiesAts, wins, losses, ties]
+    return records
 
 
 if __name__ == '__main__':
