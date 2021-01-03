@@ -65,7 +65,7 @@ def query():
 
     else:
 
-        return render_template('new.html', dictOfYears = OrderedDict())
+        return render_template('new.html', dictOfYears = OrderedDict(), records = [], totalRecord = [])
 
 def prepareQueryStatementForTeam(year, beginMonth, endMonth, team, isFav, isGreater, points, homeOrAway):
     if team == "LAChargers":
