@@ -1,14 +1,16 @@
 from flask import Flask, request, flash, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from collections import OrderedDict
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/spreadhistory'
-app.config['SECRET_KEY'] = "random string"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'Heroku_Database_URL'
+#app.config['SECRET_KEY'] = "random string"
+
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-nfl2020 = db.Table('nfl2020', db.metadata, autoload = True, autoload_with=db.engine)
 
 @app.route('/', methods = ['GET', 'POST'])
 def query():
