@@ -5,9 +5,9 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'Heroku_Database_URL'
-app.config['SECRET_KEY'] = "random string"
+#app.config['SECRET_KEY'] = "random string"
 
-app.config.from_object(os.environ['APP_SETTINGS'])
+#app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
