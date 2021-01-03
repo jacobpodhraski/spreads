@@ -66,8 +66,23 @@ def query():
         return render_template('new.html', dictOfYears = OrderedDict())
 
 def prepareQueryStatementForTeam(year, beginMonth, endMonth, team, isFav, isGreater, points):
+    if team == "LAChargers":
+        statement = "select * from nfl" + year + " where team like '"+ team + "' or team like 'SanDiego' and "
+        if int(year) < 2017:
+            team = "SanDiego"
+    elif team == "LARams":
+        statement = "select * from nfl" + year + " where team like '"+ team + "' or team like 'St.Louis' or team like 'LosAngeles' and "
+        if int(year) < 2016:
+            team = "St.Louis"
+        elif int(year) == 2016:
+            team = "LosAngeles"
+    elif team == "LasVegas":
+        statement = "select * from nfl" + year + " where team like '"+ team + "' or team like 'Oakland' and "
+        if int(year) < 2020:
+            team = "Oakland"
+    else:
+        statement = "select * from nfl" + year + " where team like '"+ team + "' and "
 
-    statement = "select * from nfl" + year + " where team like '"+ team + "' and "
 
     if isFav == "Favourite":
         if isGreater == "more":
