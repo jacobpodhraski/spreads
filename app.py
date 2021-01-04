@@ -106,7 +106,7 @@ def prepareQueryStatementForTeam(year, beginMonth, endMonth, team, isFav, isGrea
     elif isFav == "Underdog":
         statement = statement + ' and close >= 30'
         obtainAllUnderdogs = db.engine.execute(statement)
-        underdogGameIds = findAllGameIds(obtainAllUnderdogs, beginMonth, endMonth, homeOrAways)
+        underdogGameIds = findAllGameIds(obtainAllUnderdogs, beginMonth, endMonth, homeOrAway)
         ##print("ready to operate on " )
         ##print(underdogGameIds)
         relevantUnderdogGames = getTableOfAllRelevantUnderdogGames(underdogGameIds, str(year), team)
