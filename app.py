@@ -4,7 +4,9 @@ from collections import OrderedDict
 import os
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://fjcopgiwtupahu:ed271e50c35f2a9e80fd2db4c893256c37cf98926a0934dec1539db84aeee91a@ec2-18-232-232-96.compute-1.amazonaws.com:5432/d1nct8hqm1v5vc'
+
 #app.config['SECRET_KEY'] = "random string"
 
 #app.config.from_object(os.environ['APP_SETTINGS'])
