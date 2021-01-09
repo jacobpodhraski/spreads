@@ -12,6 +12,9 @@
       <form action = "{{ request.path }}" method = "post">
          <label for = "team">Team</label><br>
          <select name = "team" id = "team">
+             {% if formInput[0] is defined %}
+             <option value = "{{ formInput[0] }}">{{ formInput[0] }} </option>
+             {% endif %}
              <option value = "Arizona">Arizona</option>
              <option value = "Atlanta">Atlanta</option>
              <option value = "Buffalo">Buffalo</option>
@@ -47,6 +50,9 @@
          </select></br>
          <label for = "beginYear">Year</label><br>
          <select name = "beginYear" id = "beginYear">
+             {% if formInput[1] is defined %}
+             <option value = "{{ formInput[1] }}">{{ formInput[1] }} </option>
+             {% endif %}
              <option value = "2010">2010</option>
              <option value = "2011">2011</option>
              <option value = "2012">2012</option>
@@ -60,6 +66,9 @@
              <option value = "2020">2020</option>
          </select>to
          <select name = "endYear" id = "endYear">
+             {% if formInput[2] is defined %}
+             <option value = "{{ formInput[2] }}">{{ formInput[2] }} </option>
+             {% endif %}
              <option value = "2010">2010</option>
              <option value = "2011">2011</option>
              <option value = "2012">2012</option>
@@ -75,6 +84,9 @@
          <br>
          <label for = "month">Month</label><br>
          <select name = "beginMonth" id = " beginMonth">
+             {% if formInput[3] is defined %}
+             <option value = "{{ formInput[3] }}">{{ formInput[3] }} </option>
+             {% endif %}
              <option value = "any">any</option>
              <option value = "September">September</option>
              <option value = "October">October</option>
@@ -84,6 +96,9 @@
              <option value = "February">February</option>
          </select>to
          <select name = "endMonth" id = "endMonth">
+             {% if formInput[4] is defined %}
+             <option value = "{{ formInput[4] }}">{{ formInput[4] }} </option>
+             {% endif %}
              <option value = "any">any</option>
              <option value = "September">September</option>
              <option value = "October">October</option>
@@ -95,23 +110,36 @@
          </br>
          <label for = "vh">Home or Visitor</label><br>
          <select name = "vh" id = "vh">
+             {% if formInput[5] is defined %}
+             <option value = "{{ homeOrVisValue }}">{{ formInput[5] }} </option>
+             {% endif %}
              <option value = "any">any</option>
              <option value = "H">home</option>
              <option value = "V">visitor</option>
          </select></br>
          <label for = "isFav">Favourite or Underdog</label><br>
          <select name = "isFav" id = "isFav">
+             {% if formInput[6] is defined %}
+             <option value = "{{ formInput[6] }}">{{ formInput[6] }} </option>
+             {% endif %}
              <option value = "any">any</option>
              <option value = "Favourite">Favourite</option>
              <option value = "Underdog">Underdog</option>
          </select></br>
-         <label for = "isGreater">By more/less then (Inc)</label><br>
+         <label for = "isGreater">By more/less than (Inc)</label><br>
          <select name = "isGreater" id = "isGreater">
-             <option value = "more">By More then</option>
-             <option value = "less">By Less then</option>
+             {% if formInput[7] is defined %}
+             <option value = "{{ formInput[7] }}">{{ passBackIsGreaterText }} </option>
+             {% endif %}
+             <option value = "more">By More than</option>
+             <option value = "less">By Less than</option>
          </select></br>
          <label for = "">Points</label><br>
+         {% if formInput[8] is defined %}
+         <input type = "number" step = "0.5" name = "points" placeholder = "{{formInput[8] | int}}" /><br>
+         {% else %}
          <input type = "number" step = "0.5" name = "points" placeholder = "0" /><br>
+         {% endif %}
          <input type = "submit" value = "Query" />
       </form>
       <p>{{errorMessage}}</p>

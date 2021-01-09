@@ -29,6 +29,24 @@ def query():
         endMonth = request.form['endMonth']
         homeOrAway = request.form['vh']
 
+        passBackFormHomeOrAway = homeOrAway
+        if passBackFormHomeOrAway == "H":
+            passBackFormHomeOrAway = "home"
+            homeOrVisValue = "H"
+        elif passBackFormHomeOrAway == "V":
+            passBackFormHomeOrAway = "visitor"
+            homeOrVisValue = "H"
+        else:
+            passBackFormHomeOrAway = "any"
+            homeOrVisValue = "any"
+
+        if isGreater == "more":
+            passBackIsGreaterText = "By More than"
+        else:
+            passBackIsGreaterText = "By Less than"
+
+        formInput = [team, beginYear, endYear, beginMonth, endMonth, passBackFormHomeOrAway, isFav, isGreater, int(points)]
+
         # Check if the years are valid
         if int(endYear) - int(beginYear) < 0:
             return render_template('new.html', dictOfYears = OrderedDict(), records = [], totalRecord = [], errorMessage = "Years are invalid")
@@ -61,11 +79,11 @@ def query():
                 ##print(records)
 
         totalRecord = [totalWinsAts, totalLossesAts, totalTiesAts, totalWins, totalLosses, totalTies]
-        return render_template('new.html', dictOfYears = yearByYear, records = records, totalRecord = totalRecord, beginYear = beginYear, endYear = endYear)
+        return render_template('new.html', dictOfYears = yearByYear, records = records, totalRecord = totalRecord, beginYear = beginYear, endYear = endYear, formInput = formInput, homeOrVisValue = homeOrVisValue, passBackIsGreaterText = passBackIsGreaterText)
 
     else:
 
-        return render_template('new.html', dictOfYears = OrderedDict(), records = [], totalRecord = [])
+        return render_template('new.html', dictOfYears = OrderedDict(), records = [], totalRecord = [], formInput = [])
 
 def prepareQueryStatementForTeam(year, beginMonth, endMonth, team, isFav, isGreater, points, homeOrAway):
     if team == "LAChargers":
